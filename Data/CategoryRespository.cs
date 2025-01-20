@@ -37,6 +37,30 @@ namespace ShoesShop.Data
             return categories;
         }
 
+        public CategoriesModel SelectByID(int catId)
+        {
+            CategoriesModel cat = null;
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("PR_Categories_SelectByPK", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+                cmd.Parameters.AddWithValue("@CategoryId", catId);
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    cat = new CategoriesModel
+                    {
+                        CategoryId = Convert.ToInt32(reader["CategoryId"]),
+                        CategoryName = reader["CategoryName"].ToString()
+                    };
+                }
+            }
+            return cat;
+        }
+
         //public void Insert(CategoriesModel category)
         //{
         //    using (SqlConnection conn = new SqlConnection(_connectionString))

@@ -23,6 +23,17 @@ namespace ShoesShop.Controllers
             return Ok(c);
         }
 
+        [HttpGet("/CategoryDetail/{id}")]
+        public IActionResult ShoDetail(int id)
+        {
+            var cat = _categoryRepository.SelectByID(id);
+            if (cat == null)
+            {
+                NotFound("No cat found with the provided Id.");
+            }
+            return Ok(cat);
+        }
+
         [HttpPost]
         public IActionResult InsertCategory([FromBody] CategoriesModel cat)
         {
