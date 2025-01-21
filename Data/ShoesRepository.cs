@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using ShoesShop.Models;
+using ShoesShop.Utils;
 using System.Data;
 
 namespace ShoesShop.Data
@@ -7,9 +8,10 @@ namespace ShoesShop.Data
     public class ShoesRepository
     {
         private readonly string _connectionString;
-
+        public readonly IConfiguration _configuration;
         public ShoesRepository(IConfiguration configuration)
         {
+            this._configuration = configuration;
             _connectionString = configuration.GetConnectionString("ConnectionString");
         }
 
@@ -34,8 +36,7 @@ namespace ShoesShop.Data
                         CategoryId = Convert.ToInt32(reader["CategoryId"]),
                         CategoryName = reader["CategoryName"].ToString(),
                         Price = Convert.ToDouble(reader["Price"]),
-                        //ImageURL = reader["ImageURL"].ToString(),
-                        //Image = reader["Image"] as byte[],
+                        ImageURL = reader["ImageURL"].ToString(),
                         Description = reader["Description"].ToString(),
                         Stock = Convert.ToInt32(reader["Stock"]),
                         CreatedDate = Convert.ToDateTime(reader["CreatedDate"]),
@@ -79,6 +80,37 @@ namespace ShoesShop.Data
                         Comment = reader["Comment"].ToString(),
                         ReviewDate = reader["ReviewDate"] != DBNull.Value ? Convert.ToDateTime(reader["ReviewDate"]) : (DateTime?)null,
                         Rating = reader["Rating"] != DBNull.Value ? Convert.ToInt32(reader["Rating"]) : (int?)null
+                    };
+                }
+            }
+            return shoe;
+        }
+
+        public ShoesModel SelectByPK(int shoeId)
+        {
+            ShoesModel shoe = null;
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("PR_Shoes_SelectByPK", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+                cmd.Parameters.AddWithValue("@ShoeId", shoeId);
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+                if (reader.Read())
+                {
+                    shoe = new ShoesModel
+                    {
+                        ShoeId = Convert.ToInt32(reader["ShoeId"]),
+                        Name = reader["Name"].ToString(),
+                        CategoryId = Convert.ToInt32(reader["CategoryId"]),
+                        CategoryName = reader["CategoryName"].ToString(),
+                        Price = Convert.ToDouble(reader["Price"]),
+                        //ImageURL = reader["ImageURL"].ToString(),
+                        //Image = reader["Image"] as byte[],
+                        Description = reader["Description"].ToString(),
+                        Stock = Convert.ToInt32(reader["Stock"])
                     };
                 }
             }
@@ -157,7 +189,7 @@ namespace ShoesShop.Data
             return shoes;
         }
 
-        public bool Insert(ShoesModel shoe)
+        public async Task<bool> Insert(AddShoeModel shoe)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -168,7 +200,14 @@ namespace ShoesShop.Data
                 cmd.Parameters.AddWithValue("@Name", shoe.Name);
                 cmd.Parameters.AddWithValue("@CategoryId", shoe.CategoryId);
                 cmd.Parameters.AddWithValue("@Price", shoe.Price);
-                //cmd.Parameters.AddWithValue("@ImageURL", shoe.ImageURL);
+
+
+                CloudinaryService cloudinaryService = new CloudinaryService(this._configuration);
+                string url = await cloudinaryService.UploadFileAsync(shoe.Image);
+                cmd.Parameters.AddWithValue("@ImageURL", url);
+
+
+
                 //cmd.Parameters.AddWithValue("@Image", shoe.Image);
                 cmd.Parameters.AddWithValue("@Description", shoe.Description);
                 cmd.Parameters.AddWithValue("@Stock", shoe.Stock);
@@ -179,7 +218,7 @@ namespace ShoesShop.Data
             }
         }
 
-        public bool Update(ShoesModel shoe)
+        public bool Update(AddShoeModel shoe)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -191,7 +230,7 @@ namespace ShoesShop.Data
                 cmd.Parameters.AddWithValue("@Name", shoe.Name);
                 cmd.Parameters.AddWithValue("@CategoryId", shoe.CategoryId);
                 cmd.Parameters.AddWithValue("@Price", shoe.Price);
-                //cmd.Parameters.AddWithValue("@ImageURL", shoe.ImageURL);
+                cmd.Parameters.AddWithValue("@ImageURL", shoe.ImageURL);
                 //cmd.Parameters.AddWithValue("@Image", shoe.Image);
                 cmd.Parameters.AddWithValue("@Description", shoe.Description);
                 cmd.Parameters.AddWithValue("@Stock", shoe.Stock);
