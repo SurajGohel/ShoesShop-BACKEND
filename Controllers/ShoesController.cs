@@ -62,12 +62,15 @@ namespace ShoesShop.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdateShoes(int id, [FromBody] AddShoeModel shoes)
-        {
+        public async Task<IActionResult> UpdateShoes(int id, [FromForm] AddShoeModel shoes)
+        {   
+            Console.WriteLine(id);
+            Console.WriteLine(shoes.ShoeId);
+            Console.WriteLine(shoes.Image);
             if (shoes == null || id != shoes.ShoeId)
                 return BadRequest();
 
-            var isUpdate = _shoesRepository.Update(shoes);
+            var isUpdate =await _shoesRepository.Update(shoes);
             if (!isUpdate)
                 return NotFound();
             return Ok(new { message = "User Updated successfully" });

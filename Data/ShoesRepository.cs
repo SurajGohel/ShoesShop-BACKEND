@@ -107,7 +107,7 @@ namespace ShoesShop.Data
                         CategoryId = Convert.ToInt32(reader["CategoryId"]),
                         CategoryName = reader["CategoryName"].ToString(),
                         Price = Convert.ToDouble(reader["Price"]),
-                        //ImageURL = reader["ImageURL"].ToString(),
+                        ImageURL = reader["ImageURL"].ToString(),
                         //Image = reader["Image"] as byte[],
                         Description = reader["Description"].ToString(),
                         Stock = Convert.ToInt32(reader["Stock"])
@@ -218,7 +218,7 @@ namespace ShoesShop.Data
             }
         }
 
-        public bool Update(AddShoeModel shoe)
+        public async Task<bool> Update(AddShoeModel shoe)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
@@ -230,7 +230,10 @@ namespace ShoesShop.Data
                 cmd.Parameters.AddWithValue("@Name", shoe.Name);
                 cmd.Parameters.AddWithValue("@CategoryId", shoe.CategoryId);
                 cmd.Parameters.AddWithValue("@Price", shoe.Price);
-                cmd.Parameters.AddWithValue("@ImageURL", shoe.ImageURL);
+                //cmd.Parameters.AddWithValue("@ImageURL", shoe.ImageURL);
+                CloudinaryService cloudinaryService = new CloudinaryService(this._configuration);
+                string url = await cloudinaryService.UploadFileAsync(shoe.Image);
+                cmd.Parameters.AddWithValue("@ImageURL", url);
                 //cmd.Parameters.AddWithValue("@Image", shoe.Image);
                 cmd.Parameters.AddWithValue("@Description", shoe.Description);
                 cmd.Parameters.AddWithValue("@Stock", shoe.Stock);
