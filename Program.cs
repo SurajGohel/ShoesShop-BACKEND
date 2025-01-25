@@ -15,6 +15,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<ShoesRepository>();
+builder.Services.AddScoped<CartRepository>();
+
 builder.Services.AddScoped<CategoryRespository>();
 
 builder.Services.AddEndpointsApiExplorer();
