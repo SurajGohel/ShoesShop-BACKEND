@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ShoesShop.Data;
+using ShoesShop.Models;
 
 namespace ShoesShop.Controllers
 {
@@ -35,6 +36,24 @@ namespace ShoesShop.Controllers
             if (!isDel)
                 return NotFound();
             return Ok(new { message = "Cart deleted successfully" });
+        }
+
+        [HttpPost]
+        public IActionResult InsertCart([FromBody] AddCartModel ct)
+        {
+            if (ct == null)
+            {
+                //Console.WriteLine(city.CityID);
+                return BadRequest();
+            }
+            bool isInserted = _cartRepository.Insert(ct);
+
+            if (isInserted)
+            {
+                return Ok(new { Message = "cart Inserted Succesfully" });
+            }
+
+            return StatusCode(500, "An Error Occured While Inserting cart");
         }
     }
 }
