@@ -59,5 +59,22 @@ namespace ShoesShop.Data
                 return rowsAffected > 0;
             }
         }
+
+        public bool Insert(AddCartModel cart)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("PR_CartItems_Add", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+                cmd.Parameters.AddWithValue("@UserId", cart.UserId);
+                cmd.Parameters.AddWithValue("@ShoeId", cart.ShoeId);
+                cmd.Parameters.AddWithValue("@Quantity", cart.Quantity);
+                conn.Open();
+                int rowsAffected = cmd.ExecuteNonQuery();
+                return rowsAffected > 0;
+            }
+        }
     }
 }

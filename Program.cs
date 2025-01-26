@@ -8,6 +8,15 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        policy => policy
+            .WithOrigins("https://localhost:44393") // Add your frontend origin
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -66,6 +75,8 @@ builder.Services.AddAuthorization(Options =>
 
 
 var app = builder.Build();
+
+app.UseCors("AllowSpecificOrigin");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

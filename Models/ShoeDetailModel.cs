@@ -8,7 +8,7 @@
         public int CategoryId { get; set; } // Corresponds to CategoryId (Foreign Key referencing Categories table)
         public string CategoryName { get; set; } // Corresponds to CategoryName from Categories table
         public double Price { get; set; } // Corresponds to Price
-        //public string ImageURL { get; set; } // Corresponds to ImageURL
+        public string ImageURL { get; set; } // Corresponds to ImageURL
         //public byte[] Image { get; set; } // Corresponds to Image (stored as binary data)
         public string Description { get; set; } // Corresponds to Description
         public int Stock { get; set; } // Corresponds to Stock
