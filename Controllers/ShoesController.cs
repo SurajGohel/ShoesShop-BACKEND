@@ -94,7 +94,7 @@ namespace ShoesShop.Controllers
             try
             {
                 IEnumerable<ShoesModel> shoes = _shoesRepository.SearchShoesByName(shoeName);
-
+    
                 if (shoes == null || !shoes.Any())
                 {
                     return NotFound("No shoes found with the provided name.");
