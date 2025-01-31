@@ -76,5 +76,23 @@ namespace ShoesShop.Data
                 return rowsAffected > 0;
             }
         }
+
+        public bool IsItemInCart(string userId, int shoeId)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("CheckItemInCart", conn)
+                {
+                    CommandType = CommandType.StoredProcedure
+                };
+                cmd.Parameters.AddWithValue("@UserId", userId);
+                cmd.Parameters.AddWithValue("@ShoeId", shoeId);
+
+                conn.Open();
+                int result = Convert.ToInt32(cmd.ExecuteScalar()); // Will return 1 (exists) or 0 (does not exist)
+                return result == 1;
+            }
+        }
+
     }
 }

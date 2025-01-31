@@ -55,5 +55,14 @@ namespace ShoesShop.Controllers
 
             return StatusCode(500, "An Error Occured While Inserting cart");
         }
+
+        [HttpGet("CheckItem/{userId}/{shoeId}")]
+        public IActionResult CheckItemInCart(string userId, int shoeId)
+        {
+            bool exists = _cartRepository.IsItemInCart(userId, shoeId);
+
+            return Ok(new { itemExists = exists });
+        }
+
     }
 }
