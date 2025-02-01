@@ -34,5 +34,16 @@ namespace ShoesShop.Controllers
             return StatusCode(500, "An error occurred while processing checkout.");
         }
 
+        [HttpGet("/GetUserOrders/{id}")]
+        public IActionResult ShoDetail(string id)
+        {
+            var orders = _orderRepository.SelectAll(id);
+            if (orders == null)
+            {
+                NotFound("No Order found with the provided Id.");
+            }
+            return Ok(orders);
+        }
+
     }
 }
