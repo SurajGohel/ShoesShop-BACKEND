@@ -26,6 +26,8 @@ builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<ShoesRepository>();
 builder.Services.AddScoped<CartRepository>();
 builder.Services.AddScoped<OrderRepository>();
+builder.Services.AddScoped<DashboardRepository>();
+
 
 
 builder.Services.AddScoped<CategoryRespository>();

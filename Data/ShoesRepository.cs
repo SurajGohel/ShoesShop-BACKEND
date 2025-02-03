@@ -141,7 +141,7 @@ namespace ShoesShop.Data
                         CategoryName = reader["CategoryName"].ToString(),
 
                         Price = Convert.ToDouble(reader["Price"]),
-                        //ImageURL = reader["ImageURL"].ToString(),
+                        ImageURL = reader["ImageURL"].ToString(),
                         //Image = reader["Image"] as byte[],
                         Description = reader["Description"].ToString(),
                         Stock = Convert.ToInt32(reader["Stock"]),
@@ -177,7 +177,7 @@ namespace ShoesShop.Data
                         CategoryId = Convert.ToInt32(reader["CategoryId"]),
                         CategoryName = reader["CategoryName"].ToString(),
                         Price = Convert.ToDouble(reader["Price"]),
-                        //ImageURL = reader["ImageURL"].ToString(),
+                        ImageURL = reader["ImageURL"].ToString(),
                         //Image = reader["Image"] as byte[],
                         Description = reader["Description"].ToString(),
                         Stock = Convert.ToInt32(reader["Stock"]),
